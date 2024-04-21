@@ -14,14 +14,6 @@ export default function Experience({ texture }: Props) {
         <planeGeometry args={[2, 2]} />
         {texture && <meshBasicMaterial map={texture} side={DoubleSide} />}
       </mesh>
-      <mesh position={[-3, 0, 0]}>
-        <planeGeometry args={[2, 2]} />
-        <meshBasicMaterial color="cyan" />
-      </mesh>
-      <mesh position={[3, 0, 0]}>
-        <planeGeometry args={[2, 2]} />
-        <meshBasicMaterial color="green" />
-      </mesh>
     </>
   );
 }
