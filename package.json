@@ -20,6 +20,7 @@
     "prettier-plugin-tailwindcss": "^0.5.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.0.6",
     "react-image-crop": "^11.0.5",
     "tailwindcss": "^3.4.3",
     "three": "^0.162.0"
