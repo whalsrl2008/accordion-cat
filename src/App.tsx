@@ -1,4 +1,8 @@
-import { useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+import {
+  ChromaticAberration,
+  EffectComposer,
+} from "@react-three/postprocessing";
 import {
   CameraIcon,
   ImageUpIcon,
@@ -6,27 +10,47 @@ import {
   MenuIcon,
   Share2Icon,
 } from "lucide-react";
-import Experience from "./Components/Experience";
-import { Canvas } from "@react-three/fiber";
-import Dialog from "./Components/Dialog";
-import { Texture, TextureLoader } from "three";
-import { OrbitControls } from "@react-three/drei";
+import { useRef, useState } from "react";
+import { Texture, TextureLoader, Vector2 } from "three";
+import Experience from "./components/scene/Experience";
+import Dialog from "./components/ui/Dialog";
 // import Cropper from "react-easy-crop";
 
 function App() {
   // States
-  // const [imageSrc, setImageSrc] = useState<string | ArrayBuffer | null>(null);
   const [texture, setTexture] = useState<Texture | undefined>(undefined);
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [isCropModalOpen, setCropModalOpen] = useState<boolean>(false);
-  // const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  // const [zoom, setZoom] = useState<number>(1);
+  const [croppedImage, setCroppedImage] = useState<
+    string | ArrayBuffer | null
+  >();
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState();
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Handler
+
+  // const handleInputImageChange = (e) => {
+  //   const reader = new FileReader();
+  //   if (e.target.files[0]) {
+  //     setCropModalOpen(true);
+  //     reader.readAsDataURL(e.target.files[0]);
+  //     reader.onload = () => {
+  //       setCroppedImage(reader.result);
+  //     };
+  //   }
+  // };
+
+  // const handleCropImage = async () => {
+  //   try {
+  //     const cropped = await getCroppedImg(croppedImage, croppedAreaPixels);
+  //     const data = new FormData();
+  //     data.append('background')
+  //   };
+  // }
+
   const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0];
@@ -47,31 +71,25 @@ function App() {
     setDialogOpen(false);
   };
 
-  // const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const reader = new FileReader();
-  //   const file = e.target.files?.[0];
-  //   if (file && file !== null) {
-  //     setCropModalOpen(true);
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => {
-  //       setImageSrc(reader.result);
-  //     };
-  //   }
-  // };
-
-  // const onCropComplete = (croppedArea, croppedAreaPixels) => {
-  //   console.log(croppedArea, croppedAreaPixels);
-  // };
-
-  // Size
-  // const windowHeight = window.innerHeight;
+  const EffectVar = new Vector2(0.01, 0.001);
 
   return (
     <main className="px-[240px]">
       <div className="text-3xl">Accordion-Cat</div>
-      <Canvas ref={canvasRef} style={{ display: "relative", height: `500px` }}>
-        <OrbitControls />
+      <Canvas
+        className="canvas"
+        ref={canvasRef}
+        style={{ display: "relative", height: `500px` }}
+      >
+        <color attach="background" args={["white"]} />
         <Experience texture={texture} />
+        <EffectComposer>
+          <ChromaticAberration
+            offset={EffectVar}
+            radialModulation={false}
+            modulationOffset={0}
+          />
+        </EffectComposer>
       </Canvas>
 
       {/* Input */}
@@ -116,15 +134,6 @@ function App() {
 
       <Dialog isOpen={isCropModalOpen} onClose={() => setCropModalOpen(false)}>
         <div>hi</div>
-        {/* <Cropper
-          image={imageSrc}
-          crop={crop}
-          zoom={zoom}
-          aspect={1}
-          onCropChange={setCrop}
-          onCropComplete={onCropComplete}
-          onZoomChange={setZoom}
-        /> */}
       </Dialog>
     </main>
   );

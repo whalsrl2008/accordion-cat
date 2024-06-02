@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import Cropper from "react-easy-crop";
+import { useState } from "react";
+import Cropper, { Area } from "react-easy-crop";
 
 const CONTAINER_WIDTH = window.innerWidth;
 
@@ -7,21 +7,19 @@ type Props = {
   imageUrl: string;
   width: number;
   height: number;
+  setCroppedAreaPixels: Area;
   cropShape: string;
 };
 
-export const ImageCropper = ({
-  imageUrl,
-  width = 4,
-  height = 4,
-  cropShape,
-}: Props) => {
+export const ImageCropper = ({ imageUrl, width, height, cropShape }: Props) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
-  const onCropComplete = useCallback((croppedAreaPixel) => {
-    setCroppedAreaPixels(croppedAreaPixel);
-  }, []);
+  const onCropComplete = () => {
+    (croppedArea: Area, croppedAreaPixels: Area) => {
+      console.log(croppedArea, croppedAreaPixels);
+    };
+  };
 
   return (
     <div>
