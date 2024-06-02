@@ -1,13 +1,7 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import React, { useEffect, useRef } from "react";
-import {
-  DoubleSide,
-  Group,
-  MeshBasicMaterial,
-  MeshStandardMaterial,
-  SkinnedMesh,
-} from "three";
+import { Group, MeshStandardMaterial, SkinnedMesh } from "three";
 
 type PaperProps = {
   progress: number;
@@ -43,11 +37,6 @@ const Paper = React.forwardRef<Group, PaperProps>((props, forwardedRef) => {
   const PaperMat = materials["Material.001"] as MeshStandardMaterial;
   const PaperBone = (nodes.Paper as SkinnedMesh).skeleton;
 
-  const newPaperMat = new MeshBasicMaterial({
-    map: PaperMat.map,
-    side: DoubleSide,
-  });
-
   return (
     <group ref={forwardedRef}>
       <group ref={group} dispose={null} castShadow receiveShadow>
@@ -56,7 +45,7 @@ const Paper = React.forwardRef<Group, PaperProps>((props, forwardedRef) => {
             <skinnedMesh
               name="Paper"
               geometry={PaperGeo}
-              material={newPaperMat}
+              material={PaperMat}
               skeleton={PaperBone}
             />
             <primitive object={nodes.Middle_Holder} />

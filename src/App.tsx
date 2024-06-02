@@ -1,16 +1,22 @@
 import { Canvas } from "@react-three/fiber";
 import {
+  ChromaticAberration,
+  EffectComposer,
+} from "@react-three/postprocessing";
+import {
   CameraIcon,
   ImageUpIcon,
   ImagesIcon,
   MenuIcon,
   Share2Icon,
 } from "lucide-react";
-import { useRef, useState } from "react";
-import { Texture, TextureLoader } from "three";
+import { useEffect, useRef, useState } from "react";
+import { Texture, TextureLoader, Vector2 } from "three";
 import Experience from "./components/scene/Experience";
 import Dialog from "./components/ui/Dialog";
-import VerticalSlide from "./components/ui/VerticalSlide";
+import VerticalSlide, {
+  VerticalSliderHandle,
+} from "./components/ui/VerticalSlide";
 // import Cropper from "react-easy-crop";
 
 function App() {
@@ -29,6 +35,7 @@ function App() {
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sliderDeltaRef = useRef<VerticalSliderHandle>(null);
 
   // Handler
 
@@ -73,10 +80,23 @@ function App() {
 
   const handleAnimProgress = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProgress(parseFloat(e.target.value));
-    console.log(progress);
+    // console.log(progress);
   };
 
-  // const EffectVar = new Vector2(0.01, 0.001);
+  const [effectVal, setEffectVal] = useState<Vector2>(new Vector2(0.01, 0.001));
+
+  useEffect(() => {
+    if (sliderDeltaRef.current) {
+      const delta = sliderDeltaRef.current.getDelta();
+      setEffectVal(
+        new Vector2(
+          Math.abs(delta) * Math.random(),
+          (Math.abs(delta) * Math.random()) / 10
+        )
+      );
+      console.log("delta : ", delta);
+    }
+  }, [progress]);
 
   return (
     <main className="px-[240px]">
@@ -85,16 +105,19 @@ function App() {
         className="canvas"
         ref={canvasRef}
         style={{ display: "relative", height: `500px` }}
+        shadows
+        dpr={[1, 2]}
       >
+        <fog attach="fog" args={["lightpink", 60, 100]} />
         <color attach="background" args={["white"]} />
         <Experience texture={texture} progress={progress} />
-        {/* <EffectComposer>
+        <EffectComposer>
           <ChromaticAberration
-            offset={EffectVar}
+            offset={effectVal}
             radialModulation={false}
             modulationOffset={0}
           />
-        </EffectComposer> */}
+        </EffectComposer>
       </Canvas>
 
       {/* Input */}
@@ -143,6 +166,7 @@ function App() {
         min={0}
         max={duration / 2}
         step={duration / 1000}
+        ref={sliderDeltaRef}
       />
 
       <Dialog isOpen={isCropModalOpen} onClose={() => setCropModalOpen(false)}>

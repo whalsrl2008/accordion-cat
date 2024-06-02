@@ -1,4 +1,4 @@
-import { Float } from "@react-three/drei";
+import { Environment, Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Group, Texture, Vector3 } from "three";
@@ -62,8 +62,11 @@ export default function Experience({ texture, progress }: Props) {
   }, []);
 
   return (
-    <Float>
-      <Paper ref={paperRef} progress={progress ? progress : 0} />
-    </Float>
+    <>
+      <Environment background={false} preset="warehouse" />
+      <Float>
+        <Paper ref={paperRef} progress={progress ? progress : 0} />
+      </Float>
+    </>
   );
 }
