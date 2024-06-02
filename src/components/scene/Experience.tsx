@@ -1,3 +1,4 @@
+import { Float } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Group, Texture, Vector3 } from "three";
@@ -5,12 +6,13 @@ import Paper from "./Paper";
 
 type Props = {
   texture?: Texture;
+  progress?: number;
 };
 
-export default function Experience({ texture }: Props) {
+export default function Experience({ texture, progress }: Props) {
   // const cubeRef = useRef<Mesh>(null);
 
-  console.log(texture);
+  // console.log(texture);
   const paperRef = useRef<Group>(null);
 
   const { camera } = useThree();
@@ -60,8 +62,8 @@ export default function Experience({ texture }: Props) {
   }, []);
 
   return (
-    <>
-      <Paper ref={paperRef} />
-    </>
+    <Float>
+      <Paper ref={paperRef} progress={progress ? progress : 0} />
+    </Float>
   );
 }

@@ -1,4 +1,5 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import React, { useEffect, useRef } from "react";
 import {
   DoubleSide,
@@ -8,26 +9,34 @@ import {
   SkinnedMesh,
 } from "three";
 
-type PaperProps = {};
+type PaperProps = {
+  progress: number;
+};
 
 const Paper = React.forwardRef<Group, PaperProps>((props, forwardedRef) => {
   // GroupRef For Playing Animation
   const group = useRef<Group>(null);
 
   // Model Load
-  const { nodes, materials, animations } = useGLTF(
+  const { scene, nodes, materials, animations } = useGLTF(
     "src/assets/Rigging_test_2.glb"
   );
 
   // Animations
   const { actions, mixer } = useAnimations(animations, group);
+  // console.log(props.progress);
 
   // Play when Mounted
   useEffect(() => {
-    console.log(actions);
+    // console.log(actions);
     const animationB = mixer.clipAction(animations[1]);
     animationB.play();
+    console.log(animationB);
   }, []);
+
+  useFrame((state, delta) => {
+    mixer.setTime(props.progress);
+  });
 
   // Geo, Mat, Bone Type
   const PaperGeo = (nodes.Paper as SkinnedMesh).geometry;

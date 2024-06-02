@@ -1,9 +1,5 @@
 import { Canvas } from "@react-three/fiber";
 import {
-  ChromaticAberration,
-  EffectComposer,
-} from "@react-three/postprocessing";
-import {
   CameraIcon,
   ImageUpIcon,
   ImagesIcon,
@@ -11,9 +7,10 @@ import {
   Share2Icon,
 } from "lucide-react";
 import { useRef, useState } from "react";
-import { Texture, TextureLoader, Vector2 } from "three";
+import { Texture, TextureLoader } from "three";
 import Experience from "./components/scene/Experience";
 import Dialog from "./components/ui/Dialog";
+import VerticalSlide from "./components/ui/VerticalSlide";
 // import Cropper from "react-easy-crop";
 
 function App() {
@@ -25,6 +22,9 @@ function App() {
     string | ArrayBuffer | null
   >();
   const [croppedAreaPixels, setCroppedAreaPixels] = useState();
+
+  const [progress, setProgress] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(1.6666666269302368);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -71,7 +71,12 @@ function App() {
     setDialogOpen(false);
   };
 
-  const EffectVar = new Vector2(0.01, 0.001);
+  const handleAnimProgress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProgress(parseFloat(e.target.value));
+    console.log(progress);
+  };
+
+  // const EffectVar = new Vector2(0.01, 0.001);
 
   return (
     <main className="px-[240px]">
@@ -82,14 +87,14 @@ function App() {
         style={{ display: "relative", height: `500px` }}
       >
         <color attach="background" args={["white"]} />
-        <Experience texture={texture} />
-        <EffectComposer>
+        <Experience texture={texture} progress={progress} />
+        {/* <EffectComposer>
           <ChromaticAberration
             offset={EffectVar}
             radialModulation={false}
             modulationOffset={0}
           />
-        </EffectComposer>
+        </EffectComposer> */}
       </Canvas>
 
       {/* Input */}
@@ -131,6 +136,14 @@ function App() {
           <Share2Icon size={30} />
         </button>
       </aside>
+
+      <VerticalSlide
+        currentValue={progress}
+        handleValue={handleAnimProgress}
+        min={0}
+        max={duration / 2}
+        step={duration / 1000}
+      />
 
       <Dialog isOpen={isCropModalOpen} onClose={() => setCropModalOpen(false)}>
         <div>hi</div>
