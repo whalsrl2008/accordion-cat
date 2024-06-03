@@ -64,6 +64,10 @@ export default function Experience({ texture, progress }: Props) {
   return (
     <>
       <Environment background={false} preset="warehouse" />
+      <directionalLight
+        shadow-mapSize-height={512}
+        shadow-mapSize-width={512}
+      />
       <Float>
         <Paper ref={paperRef} progress={progress ? progress : 0} />
       </Float>
