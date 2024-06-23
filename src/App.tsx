@@ -100,7 +100,12 @@ function App() {
 
   return (
     <main className="px-[240px]">
-      <div className="text-3xl">Accordion-Cat</div>
+      <div className="text-3xl font-londrina_solid font-normal uppercase">
+        <div>
+          meme <br /> archive <br /> noddle
+        </div>
+        <div>accordion - cat</div>
+      </div>
       <Canvas
         className="canvas"
         ref={canvasRef}
